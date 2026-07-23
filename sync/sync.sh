@@ -14,7 +14,7 @@
 # 新 agent 接入无需改动本脚本。
 set -euo pipefail
 
-TOOL_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOOL_HOME="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="${PFC_MEMORY_HOME:-$HOME/.prefrontal-cortex}"
 MERGE="$TOOL_HOME/union_merge.py"
 REGISTRY="$REPO/registry"
