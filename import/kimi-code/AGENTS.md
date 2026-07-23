@@ -2,7 +2,7 @@
 
 ## prefrontal-cortex：自主记忆同步（用户长期授权）
 
-本机有一个共享记忆仓库 `~/.prefrontal-cortex`（GitHub: orriduck/prefrontal-cortex，私有），
+本机有一个共享记忆仓库 `~/.prefrontal-cortex`（私有 git 仓库，配合公共工具库 prefrontal 使用），
 由 kimi（Kimi Work）、Kimi Claw（openclaw）和 Kimi Code 三方共享、备份、可迁移。
 
 作为 Kimi Code，你的约定（repo-only 模式，记忆直接写在仓库里）：

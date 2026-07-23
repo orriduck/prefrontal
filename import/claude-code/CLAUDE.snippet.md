@@ -1,7 +1,7 @@
 <!-- prefrontal-cortex:sync BEGIN -->
 ## prefrontal-cortex：自主记忆同步（用户长期授权）
 
-本机有一个共享记忆仓库 `~/.prefrontal-cortex`（GitHub: orriduck/prefrontal-cortex，私有），
+本机有一个共享记忆仓库 `~/.prefrontal-cortex`（私有 git 仓库，配合公共工具库 prefrontal 使用），
 由 kimi（Kimi Work）、Kimi Claw（openclaw）、Kimi Code、Claude Code 共享、备份、可迁移。
 
 作为 Claude Code，你的约定：
