@@ -65,14 +65,29 @@ bash ~/Devs/prefrontal/sync/sync.sh status
 
 环境变量：`PFC_MEMORY_HOME`（记忆库位置，默认 `~/.prefrontal-cortex`）。
 
-## Cron jobs
+## Agent-agnostic cron jobs
 
-Agent-agnostic cron prompts live in `cron/`. They define jobs that Hermes,
-Codex, or another agent can run without depending on agent-specific identity.
+Agent-agnostic cron prompts live in `cron/`. They define repeatable jobs that
+Hermes, Codex, or another agent can run without depending on agent-specific
+identity. The prompt is the contract; the runner supplies its own tool access.
 
-- `cron/memory-steward.md` — periodically reviews old/noisy memory and writes a
+- `cron/memory-steward.md` — periodically reviews old/noisy memory, credential
+  mentions, duplicates, stale facts, and directory structure. It writes a
   proposal under `~/.prefrontal-cortex/review/`; it does not directly rewrite
-  canonical memory. Use `templates/memory-review.md` for the review format.
+  canonical memory or `shared/`.
+- `templates/memory-review.md` — required proposal format for Memory Steward
+  output, with explicit user choices such as solidify, archive, remove from
+  active memory, keep unchanged, or credential-boundary.
+
+Memory Steward is intentionally review-first:
+
+```bash
+# Agent reads the contract, inspects the memory repo, and creates a proposal.
+$AGENT < ~/Devs/prefrontal/cron/memory-steward.md
+
+# After the user marks decisions, an agent applies approved changes separately.
+bash ~/.prefrontal-cortex/sync/sync.sh commit "memory-steward: apply review YYYY-MM-DD"
+```
 
 ## 行为约定（让 agent 自主同步）
 
