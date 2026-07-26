@@ -65,6 +65,15 @@ bash ~/Devs/prefrontal/sync/sync.sh status
 
 环境变量：`PFC_MEMORY_HOME`（记忆库位置，默认 `~/.prefrontal-cortex`）。
 
+## Cron jobs
+
+Agent-agnostic cron prompts live in `cron/`. They define jobs that Hermes,
+Codex, or another agent can run without depending on agent-specific identity.
+
+- `cron/memory-steward.md` — periodically reviews old/noisy memory and writes a
+  proposal under `~/.prefrontal-cortex/review/`; it does not directly rewrite
+  canonical memory. Use `templates/memory-review.md` for the review format.
+
 ## 行为约定（让 agent 自主同步）
 
 工具之外，建议把「自主判断时机 → 告知用户 → 执行同步」的约定写进每个 agent
