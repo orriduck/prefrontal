@@ -75,6 +75,10 @@ identity. The prompt is the contract; the runner supplies its own tool access.
   mentions, duplicates, stale facts, and directory structure. It writes a
   proposal under `~/.prefrontal-cortex/review/`; it does not directly rewrite
   canonical memory or `shared/`.
+- `cron/portfolio-steward.md` — performs scheduled portfolio reviews using the
+  private policy and live account state. It separates execution-capable,
+  recommendation-only, and read-only accounts; real-money orders require an
+  order review plus explicit user confirmation.
 - `templates/memory-review.md` — required proposal format for Memory Steward
   output, with explicit user choices such as solidify, archive, remove from
   active memory, keep unchanged, or credential-boundary.
