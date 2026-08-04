@@ -16,6 +16,8 @@
 <!-- prefrontal-cortex:sync BEGIN -->
 ## prefrontal-cortex：共享记忆（repo-first，用户偏好 2026-08-04）
 
+> **如果你是第一次接入本记忆库的新 agent：先读 `~/.prefrontal-cortex/agents/README.md`（onboarding 指引，约 2 分钟）。**
+
 本机共享记忆仓库 `~/.prefrontal-cortex`（GitHub: orriduck/prefrontal-cortex），同步引擎 `~/Devs/prefrontal`（模板源：`~/Devs/prefrontal/templates/agent-global-instructions.md`）。
 
 **用户偏好：记忆以 repo 为准（repo-first）——所有 durable 记忆写入仓库文件，内部 memory store 只留精简指针。**
