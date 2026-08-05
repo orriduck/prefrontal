@@ -96,8 +96,9 @@ bash ~/.prefrontal-cortex/sync/sync.sh commit "memory-steward: apply review YYYY
 ## 行为约定（让 agent 自主同步）
 
 工具之外，建议把「自主判断时机 → 告知用户 → 执行同步」的约定写进每个 agent
-每次会话都会读的指令源。模板见 `import/<agent>/`（如
-`import/kimi-code/AGENTS.md`、`import/claude-code/CLAUDE.snippet.md`）。
+每次会话都会读的指令源。repo-only 模式模板见 `import/<agent>/`（如
+`import/codex/AGENTS.md`、hermes 直接以 agents/hermes/memory/ 为 canonical；
+claude-code/kimi 等历史 file/vault 模式 agent 的模板仅作兼容参考）。
 
 ## 安全
 
