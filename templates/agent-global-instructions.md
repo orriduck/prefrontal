@@ -7,7 +7,7 @@
 > 全局指令文件位置约定：
 > - codex → `~/.codex/AGENTS.md`
 > - claude-code → `~/.claude/CLAUDE.md`
-> - deepseek → `~/.deepseek/AGENTS.md`（未来）
+> - deepseek → `~/.dsh/AGENTS.md`（DSH user-global；加载面已验证 2026-08-13，见 `~/.prefrontal-cortex/agents/deepseek/README.md`）
 > - hermes → 无独立全局文件；记忆直接写 `agents/hermes/memory/`（repo-only）
 
 ---
@@ -25,7 +25,7 @@
 作为 <AGENT>：
 
 1. **读取**：需要用户背景/跨工具上下文时，读 `~/.prefrontal-cortex/shared/MEMORY.md` 和 `~/.prefrontal-cortex/shared/USER.md`（自动重建视图，勿手改）。
-2. **写入**：durable 信息追加到 `~/.prefrontal-cortex/agents/<AGENT>/memory/<MEM_FILE>`（`§` 分节，前缀 `[src:<AGENT>, YYYY-MM-DD, conf:high|med|low]`）。每日日志写 `agents/<AGENT>/logs/YYYY-MM-DD.md`。
+2. **写入**：durable 信息追加到 `<文件>`（`§` 分节，前缀 `[src:<AGENT>, YYYY-MM-DD, conf:high|med|low]`）。每日日志写 `agents/<AGENT>/logs/YYYY-MM-DD.md`。
 3. **禁止**：不手改 `shared/MEMORY.md` / `shared/USER.md`（重建视图会覆盖）；`.env`、`*auth*.json`、`mcp-tokens/` 永不入 git。
 4. **同步**：实质任务完成/session 结束前，先告知用户「我将进行 memory 的 GitHub 同步」，然后执行 `bash ~/.prefrontal-cortex/sync/sync.sh commit "<AGENT>: <摘要>"`。不要每条消息都同步。
 5. **跨 agent 协作（coordination）**：启动/跨 agent 工作前读 `~/.prefrontal-cortex/coordination/brief.md`（当前焦点+待办）；交接/待办只经 `python3 ~/Devs/prefrontal/sync/coord.py {list|handoff|brief}`，禁止手改 coordination/ 下文件。
@@ -41,7 +41,7 @@
 |-------|--------|
 | codex | `~/.prefrontal-cortex/agents/codex/memory/MEMORY.md` |
 | claude-code | `~/.prefrontal-cortex/agents/claude-code/memory/CLAUDE.md` |
-| deepseek | `~/.prefrontal-cortex/agents/deepseek/memory/MEMORY.md`（预留） |
+| deepseek | `~/.prefrontal-cortex/agents/deepseek/memory/MEMORY.md` |
 | hermes | `~/.prefrontal-cortex/agents/hermes/memory/MEMORY.md` |
 
 ## 变更流程
