@@ -83,6 +83,18 @@ identity. The prompt is the contract; the runner supplies its own tool access.
   output, with explicit user choices such as solidify, archive, remove from
   active memory, keep unchanged, or credential-boundary.
 
+## I3A meetings
+
+`modules/i3a/` is the public, agent-generic collaboration module for an
+**I3A Meeting**: one human approval owner observing a controller and one or
+more peer agents. It supplies the collaboration protocol, an append-only
+meeting-record format, JSON Schema, and publish-safe templates.
+
+The module deliberately separates four things with different retention and
+access rules: reusable protocol, a meeting's event record, reviewed artifacts,
+and compact durable-memory pointers. See
+[`modules/i3a/README.md`](modules/i3a/README.md) to run or publish a meeting.
+
 Memory Steward is intentionally review-first:
 
 ```bash
