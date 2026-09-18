@@ -1,5 +1,5 @@
 #!/bin/bash
-# Import prefrontal-cortex into Dario（repo-only 模式：安装 ~/AGENTS.md 行为契约段落）。幂等。
+# Import prefrontal-cortex into Dario（markdown 模式：安装 ~/AGENTS.md 行为契约段落）。幂等。
 set -euo pipefail
 TOOL_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 REPO="${PFC_MEMORY_HOME:-$HOME/.prefrontal-cortex}"
