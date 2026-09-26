@@ -7,8 +7,9 @@
 
 ```
 工具库（本仓库）                记忆库（私有，如 ~/.prefrontal-cortex）
-├── sync/sync.sh         ────►  shared/     自动重建的共识视图（勿手改）
-├── sync/union_merge.py        agents/<name>/{memory,logs,identity}
+├── sync/sync.sh         ────►  shared/{MEMORY,USER}.md  自动重建阅读视图（勿手改）
+├── sync/union_merge.py        shared/knowledge/          直接维护的共同主题知识
+│                                agents/<name>/{memory,identity}
 ├── registry/examples/         registry/<name>.env   你的真实注册项
 └── import/<agent>/            archive/     退役 agent 存档
 ```
@@ -18,9 +19,10 @@
 
 ## 核心语义
 
-- **agent 自包含**：每个 agent 的记忆、日志、身份文件都在 `agents/<name>/` 下
-- **shared 纯派生**：`shared/MEMORY.md`、`shared/USER.md` 是注册（活跃）agent
+- **agent 自包含**：每个活跃 agent 的记忆与身份文件都在 `agents/<name>/` 下
+- **shared 双层**：`shared/MEMORY.md`、`shared/USER.md` 是注册（活跃）agent
   记忆的 `§` 分节并集，每次 push 从头重建——被修改/删除的分节零残留
+- **共同知识可直写**：`shared/knowledge/` 存放职业、人物与工作方式等跨 agent 主题；同步不会覆盖它
 - **声明式接入**：新 agent = 一个 `registry/<name>.env` + 一个
   `import/<name>/install.sh`，引擎零改动
 - **存档不进视图**：退役 agent 的记忆留在仓库，但不污染共识
@@ -48,7 +50,7 @@ bash ~/Devs/prefrontal/sync/sync.sh status
 
 | MODE | 适用 | 行为 |
 |---|---|---|
-| `markdown` | 原生目录有 `MEMORY.md/USER.md`、身份文件、`memory/*.md` 日期日志 | 分目录快照 + 进 shared 视图 |
+| `markdown` | 原生目录有 `MEMORY.md/USER.md`、身份文件、`memory/` 下主题资料 | 分目录快照 + 进 shared 视图 |
 | `vault` | 整个记忆目录需原样保存 | 目录级快照（--delete 镜像） |
 | `file` | 单文件记忆（如 `~/.claude/CLAUDE.md`） | 文件快照；非 § 格式不进视图 |
 | `repo-only` | 无外部目录 | 记忆直接写在 `agents/<name>/memory/` |
@@ -65,23 +67,20 @@ bash ~/Devs/prefrontal/sync/sync.sh status
 
 环境变量：`PFC_MEMORY_HOME`（记忆库位置，默认 `~/.prefrontal-cortex`）。
 
-## Agent-agnostic cron jobs
+## Weekly Memory Distillation
 
 Agent-agnostic cron prompts live in `cron/`. They define repeatable jobs that
 Hermes, Codex, or another agent can run without depending on agent-specific
 identity. The prompt is the contract; the runner supplies its own tool access.
 
-- `cron/memory-steward.md` — periodically reviews old/noisy memory, credential
-  mentions, duplicates, stale facts, and directory structure. It writes a
-  proposal under `~/.prefrontal-cortex/review/`; it does not directly rewrite
-  canonical memory or `shared/`.
+- `cron/memory-distillation.md` — once each week, directly improves canonical
+  memory and `shared/knowledge/`: consolidate durable methods, remove duplicate
+  detail from active memory, and commit/push the result. It preserves provenance,
+  constraints and credential boundaries; it does not create daily logs or review queues.
 - `cron/portfolio-steward.md` — performs scheduled portfolio reviews using the
   private policy and live account state. It separates execution-capable,
   recommendation-only, and read-only accounts; real-money orders require an
   order review plus explicit user confirmation.
-- `templates/memory-review.md` — required proposal format for Memory Steward
-  output, with explicit user choices such as solidify, archive, remove from
-  active memory, keep unchanged, or credential-boundary.
 
 ## I3A meetings
 
@@ -95,14 +94,11 @@ access rules: reusable protocol, a meeting's event record, reviewed artifacts,
 and compact durable-memory pointers. See
 [`modules/i3a/README.md`](modules/i3a/README.md) to run or publish a meeting.
 
-Memory Steward is intentionally review-first:
+Weekly distillation is intentionally direct and versioned:
 
 ```bash
-# Agent reads the contract, inspects the memory repo, and creates a proposal.
-$AGENT < ~/Devs/prefrontal/cron/memory-steward.md
-
-# After the user marks decisions, an agent applies approved changes separately.
-bash ~/.prefrontal-cortex/sync/sync.sh commit "memory-steward: apply review YYYY-MM-DD"
+# Agent reads the contract, improves canonical knowledge, and pushes one traceable commit.
+$AGENT < ~/Devs/prefrontal/cron/memory-distillation.md
 ```
 
 ## 行为约定（让 agent 自主同步）

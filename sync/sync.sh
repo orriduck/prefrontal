@@ -4,7 +4,7 @@
 # Tools live in THIS repo (public). Memories live in a separate private repo
 # (default ~/.prefrontal-cortex, override: PFC_MEMORY_HOME).
 #
-#   sync.sh push    <agent>     native memory → agents/<agent>/，重建 shared/ 视图，提交推送
+#   sync.sh push    <agent>     native memory → agents/<agent>/，重建 shared 阅读视图，提交推送
 #   sync.sh pull    <agent>     git pull，shared/ 视图合并回原生记忆
 #   sync.sh status              漂移报告（按 memory 库 registry/ 全量检查）
 #   sync.sh restore <agent>     导入到指定 agent（委托 import/<agent>/install.sh）
@@ -43,14 +43,14 @@ snapshot() {
     mkdir -p "$dest"
     case "$MODE" in
         markdown)
-            mkdir -p "$dest/memory" "$dest/identity" "$dest/logs"
+            mkdir -p "$dest/memory" "$dest/identity" "$dest/memory/topics"
             for f in MEMORY.md USER.md; do
                 [ -f "$NATIVE_ROOT/$f" ] && rsync -a "$NATIVE_ROOT/$f" "$dest/memory/$f"
             done
             for f in SOUL.md IDENTITY.md TOOLS.md; do
                 [ -f "$NATIVE_ROOT/$f" ] && rsync -a "$NATIVE_ROOT/$f" "$dest/identity/$f"
             done
-            [ -d "$NATIVE_ROOT/memory" ] && rsync -a --update "$NATIVE_ROOT/memory/" "$dest/logs/"
+            [ -d "$NATIVE_ROOT/memory" ] && rsync -a --update "$NATIVE_ROOT/memory/" "$dest/memory/topics/"
             ;;
         vault)
             mkdir -p "$dest/memory/vault"
@@ -68,8 +68,8 @@ snapshot() {
     esac
 }
 
-# --- shared/ 视图重建：注册（活跃）agent 的 memory/ § 并集（每次从头生成，无残留）。
-# 已退役 agent（无 registry 项）的记忆留在仓库存档，但不进入共识视图 ---
+# --- shared 阅读视图重建：注册（活跃）agent 的 memory/ § 并集（每次从头生成，无残留）。
+# shared/knowledge/ 是直接维护的共同知识，绝不在这里覆盖。已退役 agent 的记忆仅存 archive/。 ---
 rebuild_views() {
     local tmp base name target
     for target in MEMORY.md USER.md; do
@@ -111,7 +111,7 @@ commit_and_push() {
             echo -e "${YELLOW}⚠️  pushed but remote hash mismatch — check manually${NC}"
         fi
     else
-        echo -e "${YELLOW}⚠️  push failed (offline?) — committed locally, will retry next sync${NC}"
+        echo -e "${YELLOW}⚠️  push failed — committed locally; check remote history, credentials, or connectivity before retrying${NC}"
     fi
 }
 
@@ -125,7 +125,7 @@ pull_native() {
                 python3 "$MERGE" "$NATIVE_ROOT/$f" "$REPO/shared/$f" "$NATIVE_ROOT/$f"
             done
             mkdir -p "$NATIVE_ROOT/memory"
-            rsync -a --update "$REPO/agents/$name/logs/" "$NATIVE_ROOT/memory/" 2>/dev/null || true
+            rsync -a --update "$REPO/agents/$name/memory/topics/" "$NATIVE_ROOT/memory/" 2>/dev/null || true
             echo -e "${GREEN}✅ shared → $NATIVE_ROOT${NC}"
             ;;
         vault)
@@ -144,7 +144,7 @@ case "$CMD" in
     push)
         load_agent "$AGENT"
         cd "$REPO"
-        git pull --rebase --quiet 2>/dev/null || true
+        git pull --rebase --quiet
         echo -e "${YELLOW}📥 snapshot $AGENT → agents/$AGENT${NC}"
         snapshot "$AGENT"
         rebuild_views
@@ -172,10 +172,10 @@ case "$CMD" in
             dest="$tmp"
             case "$MODE" in
                 markdown)
-                    mkdir -p "$dest/memory" "$dest/identity" "$dest/logs"
+                    mkdir -p "$dest/memory" "$dest/identity" "$dest/memory/topics"
                     for f in MEMORY.md USER.md; do [ -f "$NATIVE_ROOT/$f" ] && rsync -a "$NATIVE_ROOT/$f" "$dest/memory/$f"; done
                     for f in SOUL.md IDENTITY.md TOOLS.md; do [ -f "$NATIVE_ROOT/$f" ] && rsync -a "$NATIVE_ROOT/$f" "$dest/identity/$f"; done
-                    [ -d "$NATIVE_ROOT/memory" ] && rsync -a --update "$NATIVE_ROOT/memory/" "$dest/logs/"
+                    [ -d "$NATIVE_ROOT/memory" ] && rsync -a --update "$NATIVE_ROOT/memory/" "$dest/memory/topics/"
                     ;;
                 vault)
                     mkdir -p "$dest/memory/vault"
@@ -201,7 +201,7 @@ case "$CMD" in
         ;;
     commit)
         cd "$REPO"
-        git pull --rebase --quiet 2>/dev/null || true
+        git pull --rebase --quiet
         rebuild_views
         check_nonempty
         commit_and_push "${2:-direct edit}"
